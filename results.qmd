@@ -1,0 +1,11 @@
+---
+title: "Simulation results"
+format: html
+---
+
+The following bar plot shows probability of study success for each sample size.
+
+```{r}
+library(targets)
+tar_read(plot)
+```
