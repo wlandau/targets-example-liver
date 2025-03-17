@@ -1,10 +1,17 @@
+library(crew.cluster)
 library(targets)
 library(tarchetypes)
 library(tibble)
 
 tar_option_set(
   packages = c("dplyr", "ggplot2", "posterior", "rstanarm", "tibble"),
-  format = "qs"
+  format = "qs",
+  controller = crew_controller_sge(
+    workers = 100,
+    options_cluster = crew_options_sge(
+      script_lines = file.path("module load R", getRversion())
+    )
+  )
 )
 
 tar_source()
