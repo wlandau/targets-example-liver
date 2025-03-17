@@ -1,7 +1,7 @@
 model_historical_data <- function(
   chains = 4,
-  iterations = 4e3,
-  cores = 1
+  iterations = 2e3,
+  cores = 4
 ) {
   stan_jm(
     formulaLong = logBili ~ year + albumin + (1 | id),
@@ -18,8 +18,8 @@ model_historical_data <- function(
 model_simulated_data <- function(
   simulated_data,
   chains = 4,
-  iterations = 4e3,
-  cores = 1
+  iterations = 2e3,
+  cores = 4
 ) {
   stan_jm(
     formulaLong = log_bilirubin ~ years_measured + albumin + (1 | patient_id),
@@ -33,10 +33,10 @@ model_simulated_data <- function(
   )
 }
 
-prior_hazard_ratio_draws <- function(fit_historical_data, n = 1e3) {
+prior_hazard_ratio_draws <- function(fit_historical_data, n_draws = 1e3) {
   fit_historical_data |>
     as_draws_df() |>
     pull(`Event|trt`) |>
-    tail(n = n) |>
+    tail(n = n_draws) |>
     exp()
 }

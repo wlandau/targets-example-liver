@@ -1,11 +1,13 @@
 simulate_trial <- function(
-  n_patient = 100,
+  sample_size = 100,
   n_measurement = 25,
   hazard_ratio = 0.5,
-  iterations = 2e3
+  chains = 4,
+  iterations = 2e3,
+  cores = 4
 ) {
   simulated_data <- simulate_data(
-    n_patient = n_patient,
+    sample_size = sample_size,
     n_measurement = n_measurement,
     hazard_ratio = hazard_ratio
   )
@@ -21,6 +23,7 @@ simulate_trial <- function(
     exp()
   tibble::tibble(
     probability_efficacy = mean(hazard_ratio < 0.75),
-    mean_hazard_ratio = mean(hazard_ratio)
+    mean_hazard_ratio = mean(hazard_ratio),
+    sample_size = sample_size
   )
 }

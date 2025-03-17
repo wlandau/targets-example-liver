@@ -1,8 +1,8 @@
-simulate_data_longitudinal <- function(n_patient, n_measurement) {
-  n_control <- n_patient / 2
+simulate_data_longitudinal <- function(sample_size, n_measurement) {
+  n_control <- sample_size / 2
   n_treatment <- n_control
-  n_long <- n_patient * n_measurement
-  patient_id <- rep(seq_len(n_patient), each = n_measurement)
+  n_long <- sample_size * n_measurement
+  patient_id <- rep(seq_len(sample_size), each = n_measurement)
   study_arm <- c(
     rep("control", n_measurement * n_control),
     rep("treatment", n_measurement * n_treatment)
@@ -81,12 +81,12 @@ filter_data_longitudinal <- function(
 }
 
 simulate_data <- function(
-  n_patient = 100,
+  sample_size = 100,
   n_measurement = 25,
   hazard_ratio = 0.5
 ) {
   data_longitudinal <- simulate_data_longitudinal(
-    n_patient = n_patient,
+    sample_size = sample_size,
     n_measurement = n_measurement
   )
   data_survival <- simulate_data_survival(
