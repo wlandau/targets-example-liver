@@ -34,10 +34,9 @@ model_simulated_data <- function(
 }
 
 prior_hazard_ratio_draws <- function(fit_historical_data, n = 1e3) {
-  hazard_ratio_draw <- fit_historical_data |>
+  fit_historical_data |>
     as_draws_df() |>
     pull(`Event|trt`) |>
     tail(n = n) |>
     exp()
-  tibble(hazard_ratio_draw = hazard_ratio_draw)
 }

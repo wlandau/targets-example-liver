@@ -1,12 +1,10 @@
 simulate_trial <- function(
-  fit_historical_data,
   n_patient = 100,
   n_measurement = 25,
   hazard_ratio = 0.5,
   iterations = 2e3
 ) {
   simulated_data <- simulate_data(
-    fit_historical_data = fit_historical_data,
     n_patient = n_patient,
     n_measurement = n_measurement,
     hazard_ratio = hazard_ratio

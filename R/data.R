@@ -1,30 +1,28 @@
-simulate_data_longitudinal <- function(
-  fit_historical_data,
-  n_patient,
-  n_measurement
-) {
+simulate_data_longitudinal <- function(n_patient, n_measurement) {
   n_control <- n_patient / 2
   n_treatment <- n_control
   n_long <- n_patient * n_measurement
-  parameters <- posterior::summarize_draws(fit_historical_data)
-  beta <- parameters$mean
-  names(beta) <- parameters$variable
   patient_id <- rep(seq_len(n_patient), each = n_measurement)
   study_arm <- c(
     rep("control", n_measurement * n_control),
     rep("treatment", n_measurement * n_treatment)
   )
   years_measured <- rexp(n = n_long, rate = 1 / mean(pbcLong$year))
-  years_measured[seq(from = 1, to = n_long, by = 8)] <- 0
+  years_measured[seq(from = 1, to = n_long, by = n_measurement)] <- 0
   albumin <- rnorm(
     n = n_long,
     mean = mean(pbcLong$albumin),
     sd = sd(pbcLong$albumin)
   )
-  log_bilirubin <- beta["Long1|(Intercept)"] +
-    beta["Long1|year"] * years_measured +
-    beta["Long1|albumin"] * albumin +
-    rnorm(n = n_long, sd = beta["Long1|sigma"])
+  # In truth, the model coefficients below are posterior means of
+  # parameters of fit_historical_data.
+  # For this function, fit_historical_data was avoided
+  # so the tar_visnetwork() graph looks nicer for presentations
+  # (avoids drawing overlapping edges).
+  log_bilirubin <- 2.198 + # Long1|(Intercept) parameter
+    years_measured * 0.03587 + # Long1|year parameter
+    albumin * -0.4098 + # Long1|albumin parameter
+    rnorm(n = n_long, sd = 0.4743) # Long1|sigma parameter
   tibble(
     patient_id = patient_id,
     study_arm = study_arm,
@@ -36,10 +34,9 @@ simulate_data_longitudinal <- function(
 }
 
 simulate_data_survival <- function(
-  fit_historical_data,
   data_longitudinal,
   hazard_ratio,
-  baseline_hazard = 0.25
+  baseline_hazard = 0.01
 ) {
   data_patients <- data_longitudinal |>
     group_by(patient_id) |>
@@ -50,13 +47,15 @@ simulate_data_survival <- function(
       last_measurement = max(years_measured),
       .groups = "drop"
     )
-  parameters <- posterior::summarize_draws(fit_historical_data)
-  beta <- parameters$mean
-  names(beta) <- parameters$variable
+  # In truth, the model coefficients below are posterior means of
+  # parameters of fit_historical_data.
+  # For this function, fit_historical_data was avoided
+  # so the tar_visnetwork() graph looks nicer for presentations
+  # (avoids drawing overlapping edges).
   log_hazard <- log(baseline_hazard) +
-    beta["Event|(Intercept)"] +
+    2.416 + # Event|(Intercept) parameter
     log(hazard_ratio) * (data_patients$study_arm == "treatment") + 
-    beta["Assoc|Long1|etavalue"] + data_patients$log_bilirubin
+    data_patients$log_bilirubin * 0.2473 # Assoc|Long1|etavalue parameter
   years_survived <- rexp(n = length(log_hazard), rate = exp(log_hazard))
   death <- years_survived < data_patients$last_measurement
   years_survived[!death] <- data_patients$last_measurement[!death]
@@ -82,18 +81,15 @@ filter_data_longitudinal <- function(
 }
 
 simulate_data <- function(
-  fit_historical_data,
-  n_patient = 1000,
+  n_patient = 100,
   n_measurement = 25,
   hazard_ratio = 0.5
 ) {
   data_longitudinal <- simulate_data_longitudinal(
-    fit_historical_data = fit_historical_data,
     n_patient = n_patient,
     n_measurement = n_measurement
   )
   data_survival <- simulate_data_survival(
-    fit_historical_data = fit_historical_data,
     data_longitudinal = data_longitudinal,
     hazard_ratio = hazard_ratio
   )
