@@ -7,7 +7,7 @@ tar_option_set(
   packages = c("dplyr", "ggplot2", "posterior", "rstanarm", "tibble"),
   format = "qs",
   controller = crew_controller_sge(
-    workers = 400,
+    workers = 500,
     options_cluster = crew_options_sge(
       cores = 4,
       script_lines = file.path("module load R", getRversion())
@@ -19,17 +19,21 @@ tar_source()
 
 targets_prior <- list(
   tar_target(
+    name = fit,
+    command = model_historical_data()
+  ),
+  tar_target(
     name = coefficients,
-    command = historical_coefficients()
+    command = colMeans(as_draws_df(fit))
   ),
   tar_target(
     name = prior,
-    command = rnorm(n = 1000, mean = 0.9, sd = 0.1)
+    command = prior_hazard_ratio(fit, n_draws = 1000)
   )
 )
 
 targets_simulation <- tar_map(
-  values = tibble(n_events = c(50, 100, 200)),
+  values = tibble(n_events = c(50, 200)),
   tar_target(
     name = efficacy,
     command = simulate_trial(
@@ -46,7 +50,7 @@ targets_simulation <- tar_map(
       hazard_ratio = 1,
       coefficients,
       n_events,
-      scenario = "Type 1 error"
+      scenario = "Type 1 Error"
     ),
     pattern = map(prior)
   )

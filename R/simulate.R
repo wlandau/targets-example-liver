@@ -23,11 +23,7 @@ simulate_data <- function(hazard_ratio, coefficients, n_events) {
     coefficients,
     n_events
   )
-  data_longitudinal <- filter_longitudinal(data_longitudinal, data_survival)
-  list(
-    data_longitudinal = data_longitudinal,
-    data_survival = data_survival
-  )
+  filter_datasets(data_longitudinal, data_survival)
 }
 
 simulate_data_longitudinal <- function(
@@ -99,15 +95,23 @@ simulate_data_survival <- function(
   )
 }
 
-filter_longitudinal <- function(
+filter_datasets <- function(
   data_longitudinal,
   data_survival
 ) {
-  left_join(
+  data_longitudinal <- left_join(
     x = data_longitudinal,
     y = data_survival,
     by = c("patient_id", "study_arm")
   ) |>
     filter(years_measured <= years_survived) |>
     select(contains(colnames(data_longitudinal)))
+  patients <- intersect(
+    data_longitudinal$patient_id,
+    data_survival$patient_id
+  )
+  list(
+    data_longitudinal = filter(data_longitudinal, patient_id %in% patients),
+    data_survival = filter(data_survival, patient_id %in% patients)
+  )
 }

@@ -1,4 +1,4 @@
-historical_coefficients <- function(
+model_historical_data <- function(
   chains = 4,
   iterations = 4e3,
   cores = 4
@@ -12,9 +12,7 @@ historical_coefficients <- function(
     chains = chains,
     iter = iterations,
     cores = cores
-  ) |>
-    as_draws_df() |>
-    colMeans()
+  )
 }
 
 model_simulated_data <- function(
@@ -23,10 +21,9 @@ model_simulated_data <- function(
   iterations = 2e3,
   cores = 4
 ) {
-  message <- ""
   # Try to avoid the stan_jm() error running variational Bayes (VB)
   # to create initial values:
-  for (try in seq_len(1000)) {
+  for (try in seq_len(6)) {
     out <- try(
       stan_jm(
         formulaLong = log_bilirubin ~ years_measured + albumin +
@@ -43,15 +40,20 @@ model_simulated_data <- function(
       silent = TRUE
     )
     if (inherits(out, "try-error")) {
-      message <- conditionMessage(attr(out, "condition"))
-      if (any(grepl("mvmer|variational", message))) {
-        next
-      } else {
-        stop(message)
-      }
+      message(conditionMessage(attr(out, "condition")))
+      message(paste("retry", try))
+      next
     } else {
       return(out)
     }
   }
-  stop("stan_jm() initialization failed.")
+  stop(conditionMessage(attr(out, "condition")))
+}
+
+prior_hazard_ratio <- function(fit, n_draws) {
+  fit |>
+    as_draws_df() |>
+    pull(`Event|trt`) |>
+    tail(n = n_draws) |>
+    exp()
 }
