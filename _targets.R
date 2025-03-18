@@ -17,7 +17,7 @@ tar_option_set(
 
 tar_source()
 
-targets_prior <- list(
+targets_historical <- list(
   tar_target(
     name = fit,
     command = model_historical_data()
@@ -67,7 +67,7 @@ targets_summaries <- list(
   ),
   tar_target(
     name = table,
-    command = average_years_rescued(simulations)
+    command = average_years_n_events(simulations)
   ),
   tar_quarto(
     name = quarto,
@@ -76,7 +76,7 @@ targets_summaries <- list(
 )
 
 list(
-  targets_prior,
+  targets_historical,
   targets_simulation,
   targets_summaries
 )

@@ -1,3 +1,19 @@
+#' @title Plot probabilities.
+#' @description Plot the probability of declaring efficacy
+#'   for each scenario and interim timing criterion (number of events).
+#' @return A `ggplot` object.
+#' @param simulations A `tibble` with one row per simulation and columns
+#'   with simulation results.
+#' @examples
+#'   library(dplyr)
+#'   library(ggplot2)
+#'   library(tibble)
+#'   simulations <- tibble(
+#'     scenario = c(rep("No efficacy", 2), rep("Strong efficacy", 2)),
+#'     n_events = c(50, 100, 50, 100),
+#'     probability_effect = c(0.05, 0.04, 0.81, 0.82)
+#'   )
+#'   plot_probabilities(simulations)
 plot_probabilities <- function(simulations) {
   probabilities <- simulations |>
     group_by(scenario, n_events) |>
@@ -32,13 +48,30 @@ plot_probabilities <- function(simulations) {
     theme_gray(20)
 }
 
-average_years_rescued <- function(simulations) {
+#' @title Create a table of average years until the interim.
+#' @description Plot the probability of declaring efficacy
+#'   for each scenario and interim timing criterion (number of events).
+#' @return A `ggplot` object.
+#' @param simulations A `tibble` with one row per simulation and columns
+#'   with simulation results.
+#' @examples
+#'   library(dplyr)
+#'   library(ggplot2)
+#'   library(tibble)
+#'   simulations <- tibble(
+#'     scenario = c(rep("No efficacy", 2), rep("Strong efficacy", 2)),
+#'     n_events = c(50, 100, 50, 100),
+#'     probability_effect = c(0.05, 0.04, 0.81, 0.82),
+#'     years_n_events = c(3, 5, 3, 5)
+#'   )
+#'   average_years_n_events(simulations)
+average_years_n_events <- function(simulations) {
   simulations |>
     group_by(n_events) |>
-    summarize(time = years_months(mean(years_rescued))) |>
+    summarize(time = years_months(mean(years_n_events))) |>
     rename(
       `Number of events` = n_events,
-      `Time until rescue` = time
+      `Time until n events` = time
     ) |>
     gt() |>
     cols_align(align = "left", columns = everything())
