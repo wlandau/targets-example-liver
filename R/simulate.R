@@ -5,7 +5,7 @@
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct the analysis.
+#'   at which to conduct the primary analysis.
 #' @param scenario Character string with the name of the simulation scenario.
 #' @examples
 #'   library(dplyr)
@@ -44,7 +44,7 @@ simulate_trial <- function(hazard_ratio, coefficients, n_events, scenario) {
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct the analysis.
+#'   at which to conduct the primary analysis.
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
@@ -125,7 +125,7 @@ simulate_data_longitudinal <- function(
 
 #' @title Simulate survival data
 #' @description Simulate one set of survival data.
-#'   The analysis occurs when `n_events` events happen,
+#'   The primary analysis occurs when `n_events` events happen,
 #'   at which point the survival times are censored
 #'   for all patients who are still alive and have not had liver transplants.
 #' @return A `tibble` with survival data.
@@ -136,7 +136,7 @@ simulate_data_longitudinal <- function(
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct the analysis.
+#'   at which to conduct the primary analysis.
 #' @param accrual Length of the accrual period in years.
 #'   During this period, patients enroll uniformly at random.
 #' @examples
