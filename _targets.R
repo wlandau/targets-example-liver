@@ -4,7 +4,7 @@ library(tarchetypes)
 library(tibble)
 
 tar_option_set(
-  packages = c("dplyr", "ggplot2", "posterior", "rstanarm", "tibble"),
+  packages = c("dplyr", "ggplot2", "gt", "posterior", "rstanarm", "tibble"),
   format = "qs",
   controller = crew_controller_sge(
     workers = 500,
@@ -33,24 +33,24 @@ targets_prior <- list(
 )
 
 targets_simulation <- tar_map(
-  values = tibble(n_events = c(50, 200)),
+  values = tibble(n_events = c(50, 100)),
   tar_target(
-    name = efficacy,
+    name = strong_efficacy,
     command = simulate_trial(
       hazard_ratio = prior,
       coefficients,
       n_events,
-      scenario = "Efficacy"
+      scenario = "Strong efficacy"
     ),
     pattern = map(prior)
   ),
   tar_target(
-    name = type_1_error,
+    name = no_efficacy,
     command = simulate_trial(
       hazard_ratio = 1,
       coefficients,
       n_events,
-      scenario = "Type 1 Error"
+      scenario = "No efficacy"
     ),
     pattern = map(prior)
   )
@@ -64,6 +64,10 @@ targets_summaries <- list(
   tar_target(
     name = plot,
     command = plot_probabilities(simulations)
+  ),
+  tar_target(
+    name = table,
+    command = average_years_rescued(simulations)
   ),
   tar_quarto(
     name = quarto,

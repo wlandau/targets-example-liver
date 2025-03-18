@@ -7,7 +7,6 @@ simulate_trial <- function(hazard_ratio, coefficients, n_events, scenario) {
     exp()
   tibble::tibble(
     probability_effect = mean(samples_hazard_ratio < 0.75),
-    probability_significant = mean(samples_hazard_ratio < 1),
     mean_hazard_ratio = mean(samples_hazard_ratio),
     n_events = n_events,
     years_rescued = unique(simulated_data$data_survival$years_rescued),
@@ -28,7 +27,7 @@ simulate_data <- function(hazard_ratio, coefficients, n_events) {
 
 simulate_data_longitudinal <- function(
   coefficients,
-  n_patients = 400,
+  n_patients = 250,
   n_time = 25
 ) {
   n_control <- n_patients / 2

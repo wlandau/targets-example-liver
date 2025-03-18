@@ -25,9 +25,20 @@ plot_probabilities <- function(simulations) {
       size = 5
     ) +
     xlab("\nNumber of events") +
-    ylab("Probability of study success\n") +
-    labs(fill = "Number of events") +
+    ylab("Probability of declaring efficacy\n") +
+    guides(fill = "none") +
     ylim(c(0, 1)) +
     facet_wrap(~ scenario) +
     theme_gray(20)
+}
+
+average_years_rescued <- function(simulations) {
+  simulations |>
+    group_by(n_events) |>
+    summarize(years_rescued = mean(years_rescued)) |>
+    rename(
+      `Number of events` = n_events,
+      `Years until rescue` = years_rescued
+    ) |>
+    gt()
 }

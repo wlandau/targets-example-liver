@@ -3,9 +3,17 @@ title: "Simulation results"
 format: html
 ---
 
-The following bar plot shows probability of study success for each sample size.
+The following bar plot shows probability of declaring efficacy for each scenario and decision criterion (number of events).
+The strong scenario simulates hazard ratios from a prior based on historical data.
+Under the "no efficacy" scenario, the hazard ratio equal to 1, and the probability of efficacy should not exceed 5%.
 
 ```{r}
 library(targets)
 tar_read(plot)
+```
+
+The following table shows the average number of years from first patient visit until control patients are rescued.
+
+```{r}
+tar_read(table)
 ```
