@@ -35,10 +35,19 @@ plot_probabilities <- function(simulations) {
 average_years_rescued <- function(simulations) {
   simulations |>
     group_by(n_events) |>
-    summarize(years_rescued = mean(years_rescued)) |>
+    summarize(time = years_months(mean(years_rescued))) |>
     rename(
       `Number of events` = n_events,
-      `Years until rescue` = years_rescued
+      `Time until rescue` = time
     ) |>
-    gt()
+    gt() |>
+    cols_align(align = "left", columns = everything())
+}
+
+years_months <- function(x) {
+  sprintf(
+    "%s years and %s months",
+    floor(x),
+    round((x - floor(x)) * 12)
+  )
 }
