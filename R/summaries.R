@@ -2,8 +2,8 @@ plot_probabilities <- function(simulations) {
   probabilities <- simulations |>
     group_by(sample_size) |>
     summarize(
-      sample_size = as.factor(sample_size),
-      probability_study_success = mean(probability_efficacy),
+      sample_size = as.factor(sample_size[1]),
+      probability_study_success = mean(probability_efficacy > 0.6),
       .groups = "drop"
     )
   ggplot(probabilities) +
