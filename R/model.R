@@ -7,7 +7,8 @@
 #' @param iterations Number of MCMC iterations per chain.
 #' @param cores Number of CPU cores to parallelize the MCMC chains.
 #' @examples
-#'   model_historical_data()
+#'   library(rstanarm)
+#'   model_historical_data(cores = 1)
 model_historical_data <- function(
   chains = 4,
   iterations = 4e3,
@@ -34,11 +35,16 @@ model_historical_data <- function(
 #' @param iterations Number of MCMC iterations per chain.
 #' @param cores Number of CPU cores to parallelize the MCMC chains.
 #' @examples
-#'   model_historical_data()
+#'   library(dplyr)
+#'   library(rstanarm)
+#'   historical <- model_historical_data(cores = 1)
+#'   coefficients <- colMeans(as_draws_df(historical))
+#'   data <- simulate_data(hazard_ratio = 0.75, coefficients, n_events = 50)
+#'   model_simulated_data(data, cores = 1)
 model_simulated_data <- function(
   simulated_data,
   chains = 4,
-  iterations = 2e3,
+  iterations = 4e3,
   cores = 4
 ) {
   # Try to avoid the stan_jm() error running variational Bayes (VB)
@@ -70,6 +76,17 @@ model_simulated_data <- function(
   stop(conditionMessage(attr(out, "condition")))
 }
 
+#' @title Prior hazard ratio
+#' @description Extract `n_draws` posterior draws of the hazard ratio
+#'   from a fitted joint model.
+#' @return A numeric vector of hazard ratios of treatment vs control.
+#' @param fit A fitted joint model object from [rstanarm::stan_jm()].
+#' @param n_draws Number of posterior draws to extract.
+#' @examples
+#'   library(dplyr)
+#'   library(rstanarm)
+#'   historical <- model_historical_data(cores = 1)
+#'   hist(prior_hazard_ratio(historical, n_draws = 1000))
 prior_hazard_ratio <- function(fit, n_draws) {
   fit |>
     as_draws_df() |>
