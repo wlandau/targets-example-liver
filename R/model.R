@@ -1,3 +1,13 @@
+#' @title Historical data model.
+#' @description Fit a Bayesian joint model to
+#'   the primary biliary cirrhosis datasets
+#'   in the `rstanarm` package.
+#' @return A fitted model object from [rstanarm::stan_jm()].
+#' @param chains Number of MCMC chains.
+#' @param iterations Number of MCMC iterations per chain.
+#' @param cores Number of CPU cores to parallelize the MCMC chains.
+#' @examples
+#'   model_historical_data()
 model_historical_data <- function(
   chains = 4,
   iterations = 4e3,
@@ -15,6 +25,16 @@ model_historical_data <- function(
   )
 }
 
+#' @title Simulated data model.
+#' @description Fit a Bayesian joint model to
+#'   the primary biliary cirrhosis datasets
+#'   in the `rstanarm` package.
+#' @return A fitted model object from [rstanarm::stan_jm()].
+#' @param chains Number of MCMC chains.
+#' @param iterations Number of MCMC iterations per chain.
+#' @param cores Number of CPU cores to parallelize the MCMC chains.
+#' @examples
+#'   model_historical_data()
 model_simulated_data <- function(
   simulated_data,
   chains = 4,
