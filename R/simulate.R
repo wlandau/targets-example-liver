@@ -5,7 +5,7 @@
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct an interim analysis.
+#'   at which to conduct the analysis.
 #' @param scenario Character string with the name of the simulation scenario.
 #' @examples
 #'   library(dplyr)
@@ -44,7 +44,7 @@ simulate_trial <- function(hazard_ratio, coefficients, n_events, scenario) {
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct an interim analysis.
+#'   at which to conduct the analysis.
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
@@ -123,12 +123,12 @@ simulate_data_longitudinal <- function(
     arrange(patient_id, years_measured)
 }
 
-#' @title Simulate interim survival data
-#' @description Simulate one set of survival data at an interim analysis.
-#'   An interim analysis occurs when `n_events` events happen,
+#' @title Simulate survival data
+#' @description Simulate one set of survival data.
+#'   The analysis occurs when `n_events` events happen,
 #'   at which point the survival times are censored
 #'   for all patients who are still alive and have not had liver transplants.
-#' @return A `tibble` with interim survival data.
+#' @return A `tibble` with survival data.
 #'   It has one row for each patient.
 #' @param data_longitudinal A `tibble` from [simulate_data_longitudinal()].
 #' @param hazard_ratio Numeric scalar, hazard ratio to assume for simulating
@@ -136,7 +136,7 @@ simulate_data_longitudinal <- function(
 #' @param coefficients Named numeric vector of fitted model coefficients
 #'   from a historical study in a similar indication.
 #' @param n_events Number of events (death or liver transplant)
-#'   at which to conduct an interim analysis.
+#'   at which to conduct the analysis.
 #' @param accrual Length of the accrual period in years.
 #'   During this period, patients enroll uniformly at random.
 #' @examples

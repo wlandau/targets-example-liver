@@ -1,6 +1,6 @@
 #' @title Plot probabilities.
 #' @description Plot the probability of declaring efficacy
-#'   for each scenario and interim timing criterion (number of events).
+#'   for each scenario and analysis timing criterion (number of events).
 #' @return A `ggplot` object.
 #' @param simulations A `tibble` with one row per simulation and columns
 #'   with simulation results.
@@ -48,9 +48,9 @@ plot_probabilities <- function(simulations) {
     theme_gray(20)
 }
 
-#' @title Create a table of average years until the interim.
+#' @title Create a table of average years until the analysis.
 #' @description Plot the probability of declaring efficacy
-#'   for each scenario and interim timing criterion (number of events).
+#'   for each scenario and analysis timing criterion (number of events).
 #' @return A `ggplot` object.
 #' @param simulations A `tibble` with one row per simulation and columns
 #'   with simulation results.

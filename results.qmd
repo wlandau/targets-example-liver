@@ -12,7 +12,7 @@ library(targets)
 tar_read(plot)
 ```
 
-The following table shows the average number of years from first patient visit until control patients can be rescued.
+The following table shows the average number of years until the analysis takes place.
 
 ```{r}
 library(gt)
