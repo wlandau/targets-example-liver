@@ -14,37 +14,45 @@
 #'     probability_effect = c(0.05, 0.04, 0.81, 0.82)
 #'   )
 #'   plot_probabilities(simulations)
-plot_probabilities <- function(simulations) {
-  probabilities <- simulations |>
-    group_by(scenario, n_events) |>
+plot_results <- function(trials) {
+  results <- trials |>
+    group_by(events) |>
     summarize(
-      scenario = as.factor(scenario[1]),
-      n_events = as.factor(n_events[1]),
-      probability_study_success = mean(probability_effect > 0.75),
+      `Probability of futility` = mean(probability_efficacy < 0.3),
+      `Years until interim` = mean(years_interim),
       .groups = "drop"
-    )
-  ggplot(probabilities) +
+    ) |>
+    pivot_longer(
+      cols = c("Probability of futility", "Years until interim"),
+      names_to = "facet",
+      values_to = "value"
+    ) |>
+    mutate(value = round(value, 2))
+  ggplot(results) +
+    geom_blank(
+      aes(x = events, y = value),
+      tibble(events = 50, facet = "Probability of futility", value = 1)
+    ) +
     geom_bar(
       aes(
-        x = n_events,
-        y = probability_study_success,
-        fill = n_events
+        x = events,
+        y = value,
+        fill = events
       ),
       stat = "identity"
     ) +
     geom_label(
       aes(
-        x = n_events,
-        y = probability_study_success,
-        label = probability_study_success
+        x = events,
+        y = value,
+        label = round(value, 3)
       ),
       size = 5
     ) +
-    xlab("\nNumber of events") +
-    ylab("Probability of declaring efficacy\n") +
+    xlab("\nEvents at interim") +
+    ylab("") +
     guides(fill = "none") +
-    ylim(c(0, 1)) +
-    facet_wrap(~ scenario) +
+    facet_wrap(~ facet, scales = "free_y") +
     theme_gray(20)
 }
 
@@ -68,10 +76,10 @@ plot_probabilities <- function(simulations) {
 average_years_n_events <- function(simulations) {
   simulations |>
     group_by(n_events) |>
-    summarize(time = years_months(mean(years_n_events))) |>
+    summarize(time = years_months(mean(years_interim))) |>
     rename(
-      `Number of events` = n_events,
-      `Time until n events` = time
+      `Events at interim` = n_events,
+      `Time until interim` = time
     ) |>
     gt() |>
     cols_align(align = "left", columns = everything())
