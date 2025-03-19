@@ -77,10 +77,18 @@ average_years_n_events <- function(simulations) {
     cols_align(align = "left", columns = everything())
 }
 
-years_months <- function(x) {
+#' @title Print a time span.
+#' @description Print a time span in a friendly format
+#'   rounded to the nearest month.
+#' @return A character string with a human-readable description of
+#'   the time span.
+#' @param years Numeric, span of years.
+#' @examples
+#'   years_months(2.25)
+years_months <- function(years) {
   sprintf(
     "%s years and %s months",
-    floor(x),
-    round((x - floor(x)) * 12)
+    floor(years),
+    round((years - floor(years)) * 12)
   )
 }
