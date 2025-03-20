@@ -1,14 +1,8 @@
-#' @title Historical prior for a Bayesian joint model.
-#' @description Construct a prior for a Bayesian joint model
-#'   of primary biliary cholangitis (PBC).
-#'   This prior comes from the posterior distribution of
-#'   an equivalent model fit to the `pbc` and `pbcseq`
-#'   datasets in the `survival` package.
-#'   These datasets come from the Mayo Clinic PBC trial conducted between
-#'   1974 and 1984 (Therneau and Grambsch 2000).
-#' @references T Therneau and P Grambsch (2000),
-#'   Modeling Survival Data: Extending the Cox Model,
-#'   Springer-Verlag, New York. ISBN: 0-387-98784-3.
+#' @title Prior on the hazard ratio.
+#' @description Construct a prior on the hazard ratio of
+#'   treatment vs control.
+#'   The prior comes from a Bayesian joint model
+#'   fit to historical data.
 #' @return A fitted model object from [rstanarm::stan_jm()].
 #' @param chains Number of MCMC chains.
 #' @param iterations Number of MCMC iterations per chain.
@@ -17,8 +11,8 @@
 #' @examples
 #'   library(rstanarm)
 #'   library(survival)
-#'   historical_prior(cores = 1)
-historical_prior <- function(
+#'   historical_hazard_ratio(cores = 1)
+historical_hazard_ratio <- function(
   chains = 4,
   iterations = 4e3,
   cores = 4,
@@ -49,31 +43,9 @@ historical_prior <- function(
     select(-contains(drop))
   datasets <- filter_datasets(data_longitudinal, data_survival)
   fit <- joint_model(datasets, chains, iterations, cores)
-  draws <- as_draws_df(fit) |>
-    select(-starts_with("b[long1"), -starts_with("Event|b-splines")) |>
-    tail(n = n_draws)
-}
-
-#' @title Constant baseline hazard from historical data.
-#' @description Fits an intercept-only parameteric exponential survival model
-#'   to the `pbc` data from the survival package, than takes an estimate
-#    of the constant baseline hazard rate to be `exp(- coef(fit))`.
-#'   Used in simulations because [rstanarm::stan_jm()] does not return
-#'   direct estimates of baseline hazard rates.
-#' @return Numeric scalar, estimated baseline hazard rate of the `pbc` data.
-#' @examples
-#'   historical_baseline_hazard()
-historical_baseline_hazard <- function() {
-  data_survival <- pbc |>
-    filter(!is.na(trt)) |>
-    mutate(years_survived = time / 365.25, event = status > 0)
-  fit <- survreg(
-    Surv(years_survived, event) ~ 1,
-    data = data_survival,
-    dist = "exponential"
-  )
-  exp(- coef(fit)) |>
-    unname()
+  log <- as_draws_df(fit)[["Event|study_armtreatment"]]
+  hazard_ratio <- exp(log)
+  tail(hazard_ratio, n = n_draws)
 }
 
 #' @title Bayesian joint model.
