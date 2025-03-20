@@ -13,26 +13,25 @@
 #'     n_events = c(50, 100, 50, 100),
 #'     probability_effect = c(0.05, 0.04, 0.81, 0.82)
 #'   )
-#'   plot_probabilities(simulations)
+#'   plot_results(trials)
 plot_results <- function(trials) {
+  label_enrolled <- "Patients enrolled"
+  label_futility <- "Probability of futility (%)"
   results <- trials |>
     group_by(events) |>
     summarize(
-      `Probability of futility` = mean(probability_efficacy < 0.3),
-      `Years until analysis` = mean(years_analysis),
+      `Probability of futility (%)` = 100 *
+        round(mean(probability_efficacy < 0.4), 2),
+      `Patients enrolled` = round(mean(enrolled)),
       .groups = "drop"
     ) |>
     pivot_longer(
-      cols = c("Probability of futility", "Years until analysis"),
+      cols = any_of(c(label_futility, label_enrolled)),
       names_to = "facet",
       values_to = "value"
     ) |>
-    mutate(value = round(value, 2))
+    mutate(events = as.factor(events))
   ggplot(results) +
-    geom_blank(
-      aes(x = events, y = value),
-      tibble(events = 50, facet = "Probability of futility", value = 1)
-    ) +
     geom_bar(
       aes(
         x = events,
@@ -45,13 +44,18 @@ plot_results <- function(trials) {
       aes(
         x = events,
         y = value,
-        label = round(value, 3)
+        label = ifelse(
+          facet == label_futility,
+          paste0(value, "%"),
+          value
+        )
       ),
       size = 5
     ) +
     xlab("\nEvents at analysis") +
     ylab("") +
+    ylim(c(0, 100)) +
     guides(fill = "none") +
-    facet_wrap(~ facet, scales = "free_y") +
+    facet_wrap(~ facet) +
     theme_gray(20)
 }

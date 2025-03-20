@@ -12,8 +12,7 @@
 #'   trial(1, events = 50)
 trial <- function(hazard_ratio, events) {
   simulated_data <- simulate_data(hazard_ratio, events)
-  fit <- joint_model(simulated_data)
-  samples_hazard_ratio <- fit |>
+  samples_hazard_ratio <- joint_model(simulated_data) |>
     as_draws_df() |>
     pull(`Event|study_armtreatment`) |>
     exp()
@@ -21,7 +20,8 @@ trial <- function(hazard_ratio, events) {
     probability_efficacy = mean(samples_hazard_ratio < 0.75),
     mean_hazard_ratio = mean(samples_hazard_ratio),
     events = events,
-    years_analysis = unique(simulated_data$data_survival$years_analysis)
+    years_analysis = unique(simulated_data$data_survival$years_analysis),
+    enrolled = mean(simulated_data$data_survival$enrolled)
   )
 }
 
@@ -62,16 +62,14 @@ simulate_data <- function(hazard_ratio, events) {
 #'   library(rstanarm)
 #'   library(survival)
 #'   simulate_data_longitudinal(patients = 200, readings = 25)
-simulate_data_longitudinal <- function(patients = 200, readings = 50) {
+simulate_data_longitudinal <- function(patients = 100, readings = 50) {
   rows <- patients * readings
   patient_id <- rep(seq_len(patients), each = readings)
   study_arm <- rep(c("control", "treatment"), each = rows / 2)
   years_measured <- rep(seq_len(readings) - 1, times = patients)
-  albumin <- rnorm(
-    n = rows,
-    mean = mean(pbcseq$albumin),
-    sd = sd(pbcseq$albumin)
-  )
+  albumin <- rnorm(rows, mean = mean(pbcseq$albumin), sd = sd(pbcseq$albumin))
+  # Model coefficients below come from posterior means of a Bayesian
+  # joint model fit to the pbc and pbcseq datasets from the survival package.
   log_bilirubin <- 2.169617 +
     -0.09582189 * (study_arm == "treatment") +
     -0.4425171 * albumin +
@@ -109,19 +107,11 @@ simulate_data_survival <- function(
   data_longitudinal,
   hazard_ratio,
   events,
-  accrual = 2
+  accrual = 10
 ) {
-  data_patients <- data_longitudinal |>
-    group_by(patient_id) |>
-    summarize(
-      patient_id = patient_id[1],
-      study_arm = study_arm[1],
-      log_bilirubin = mean(log_bilirubin),
-      last_measurement = max(years_measured),
-      .groups = "drop"
-    )
+  data_patients <- distinct(data_longitudinal, patient_id, study_arm)
   is_treatment <- (data_patients$study_arm == "treatment")
-  log_hazard <- - 1 + hazard_ratio * is_treatment
+  log_hazard <- - 1 + log(hazard_ratio) * is_treatment
   years_survived <- rexp(n = nrow(data_patients), rate = exp(log_hazard))
   years_enrolled <- runif(n = nrow(data_patients), min = 0, max = accrual)
   years_total <- years_enrolled + years_survived
@@ -129,12 +119,14 @@ simulate_data_survival <- function(
   event <- years_total <= years_analysis 
   years_total <- pmin(years_total, years_analysis)
   years_survived <- years_total - years_enrolled
+  enrolled <- sum(years_enrolled < years_analysis)
   tibble(
     patient_id = data_patients$patient_id,
     study_arm = data_patients$study_arm,
     event = event,
     years_survived = years_survived,
-    years_analysis = years_analysis
+    years_analysis = years_analysis,
+    enrolled = enrolled
   )
 }
 

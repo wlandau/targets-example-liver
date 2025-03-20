@@ -3,7 +3,7 @@ title: "Simulation results"
 format: html
 ---
 
-The following bar plot shows probability of declaring futility and the time until the analysis for each number of events.
+The following bar plot shows probability of declaring futility and the number of patients enrolled each number of events.
 
 ```{r}
 library(targets)

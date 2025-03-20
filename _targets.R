@@ -24,17 +24,17 @@ tar_option_set(
 
 list(
   tar_target(
-    name = hazard_ratio,
-    command = historical_hazard_ratio(n_draws = 50)
+    name = hazard_ratios,
+    command = hazard_ratio_draws(n_draws = 1000)
   ),
   tar_target(
     name = events,
-    command = c(50, 100, 150)
+    command = c(40, 50, 60, 70)
   ),
   tar_target(
     name = trials,
-    command = trial(hazard_ratio, events),
-    pattern = cross(hazard_ratio, events)
+    command = trial(hazard_ratios, events),
+    pattern = cross(hazard_ratios, events)
   ),
   tar_target(
     name = plot,
