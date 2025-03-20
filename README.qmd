@@ -95,3 +95,5 @@ This simulation exercise is a `targets` pipeline (@Landau2021).
 The pipeline uses the SGE `crew.cluster` backend to run simulations in parallel.
 Configure the `crew` backend in `_targets.R` to fit your computational resources and then call `tar_make()` to run the pipeline.
 The Quarto report in `results.html` summarizes the results. 
+
+## References

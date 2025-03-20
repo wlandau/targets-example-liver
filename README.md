@@ -122,6 +122,8 @@ parallel. Configure the `crew` backend in `_targets.R` to fit your
 computational resources and then call `tar_make()` to run the pipeline.
 The Quarto report in `results.html` summarizes the results.
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 entry-spacing="0">
 
