@@ -30,11 +30,11 @@ The longitudinal submodel is defined as follows:
 
 $$
 \begin{aligned}
-E(y_i(t)) &:= \eta_i(t) \\
 \eta_i(t) &= x_i(t) \cdot \beta + b_i
 \end{aligned}
 $$
 
+* $\eta_i(t)$ is the expected value $E(y_i(t))$.
 * $y_i(t)$ is the log bilirubin measurement of patient $i$ at time $t$ (in years).
 * $x_i(t)$ is a matrix of covariates (treatment arm, time-varying albumin measurement, and visit time in years).
 * $\beta$ is a vector of fixed effects parameters.
