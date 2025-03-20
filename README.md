@@ -37,7 +37,7 @@ defined as follows:
 
 $$
 \begin{aligned}
-\eta_i(t) &= x_i(t) \cdot \beta + b_i
+\eta_i(t) = x_i(t) \cdot \beta + b_i
 \end{aligned}
 $$
 
