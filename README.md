@@ -10,9 +10,7 @@ Suppose we are designing a randomized controlled double-blind phase 2
 clinical trial to test a novel therapy in patients with a hepatic
 autoimmune disease. The trial will enroll up to 100 patients, and
 because the disease is extremely rare, the accrual period is expected to
-last 10 years. The therapy showed promise in preclinical and phase 1
-studies, but patients undergoing treatment may be more susceptible to
-infections. If the treatment does not meaningfully improve survival,
+last 10 years. If the treatment does not meaningfully improve survival,
 then the trial should discontinue enrollment.
 
 ## Interim analysis
