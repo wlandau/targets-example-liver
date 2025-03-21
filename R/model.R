@@ -11,8 +11,8 @@
 #' @examples
 #'   library(rstanarm)
 #'   library(survival)
-#'   hazard_ratio_draws(cores = 1)
-hazard_ratio_draws <- function(
+#'   draw_hazard_ratios(cores = 1)
+draw_hazard_ratios <- function(
   chains = 4,
   iterations = 4e3,
   cores = 4,

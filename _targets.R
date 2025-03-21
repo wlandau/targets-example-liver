@@ -25,7 +25,7 @@ tar_option_set(
 list(
   tar_target(
     name = hazard_ratios,
-    command = hazard_ratio_draws(n_draws = 1000)
+    command = draw_hazard_ratios(n_draws = 1000)
   ),
   tar_target(
     name = events,
