@@ -1,29 +1,57 @@
-#' @title Simulate a trial
-#' @description Simulate one replication of the clinical trial.
-#' @return A one-row `tibble` with numerical summaries of the simulated trial.
-#' @param prior A data frame with one row with a single draw from the prior.
-#'   The columns correspond to individual parameters.
-#' @param events Number of events (death or liver transplant)
-#'   at which to conduct the analysis.
-#' @param scenario Character string with the name of the simulation scenario.
+#' @title Bayesian joint model.
+#' @description Fit a Bayesian joint model using the `rstanarm` package.
+#' @return A fitted model object from [rstanarm::stan_jm()].
+#' @param datasets A named list of simulated longitudinal and survival
+#'   datasets.
+#' @param chains Number of MCMC chains.
+#' @param iterations Number of MCMC iterations per chain.
+#' @param cores Number of CPU cores to parallelize the MCMC chains.
+#' @param baseline_hazard Character string naming the baseline hazard
+#'   function of the model.
+#' @param priorEvent_aux `rstanarm` prior distribution of the survival
+#'   auxiliary parameters. See `?rstanarm::stan_jm` for details.
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
-#'   trial(1, events = 50)
-trial <- function(hazard_ratio, events) {
-  simulated_data <- simulate_data(hazard_ratio, events)
-  samples_hazard_ratio <- joint_model(simulated_data) |>
-    as_draws_df() |>
-    pull(`Event|study_armtreatment`) |>
-    exp()
-  tibble::tibble(
-    probability_efficacy = mean(samples_hazard_ratio < 0.75),
-    mean_hazard_ratio = mean(samples_hazard_ratio),
-    events = events,
-    years_analysis = unique(simulated_data$data_survival$years_analysis),
-    enrolled = mean(simulated_data$data_survival$enrolled)
-  )
+#'   historical <- model_historical_data(cores = 1)
+#'   coefficients <- colMeans(as_draws_df(historical))
+#'   data <- simulate_data(hazard_ratio = 0.75, coefficients, n_events = 50)
+#'   joint_model(data, cores = 1)
+joint_model <- function(
+    datasets,
+    chains = 4,
+    iterations = 4e3,
+    cores = 4
+) {
+  # Try to avoid the stan_jm() error running variational Bayes (VB)
+  # to create initial values:
+  for (try in seq_len(6)) {
+    out <- try(
+      stan_jm(
+        formulaLong = log_bilirubin ~ study_arm + albumin + years_measured +
+          (1 | patient_id),
+        formulaEvent = Surv(years_survived, event) ~ study_arm,
+        time_var = "years_measured",
+        dataLong = datasets$data_longitudinal,
+        dataEvent = datasets$data_survival,
+        chains = chains,
+        iter = iterations,
+        cores = cores
+        # init = 0 # unfortunatley doesn't avoid the error. stan_jm() runs VB anyway.
+      ),
+      silent = TRUE
+    )
+    if (inherits(out, "try-error")) {
+      message(conditionMessage(attr(out, "condition")))
+      message(paste("retry", try))
+      next
+    } else {
+      return(out)
+    }
+  }
+  stop(conditionMessage(attr(out, "condition")))
 }
+
 
 #' @title Simulate trial data
 #' @description Simulate one set of clinical trial data.
@@ -104,10 +132,10 @@ simulate_data_longitudinal <- function(patients = 100, readings = 50) {
 #'   long <- simulate_data_longitudinal()
 #'   survival <- simulate_data_survival(long, 1, events = 50)
 simulate_data_survival <- function(
-  data_longitudinal,
-  hazard_ratio,
-  events,
-  accrual = 10
+    data_longitudinal,
+    hazard_ratio,
+    events,
+    accrual = 10
 ) {
   data_patients <- distinct(data_longitudinal, patient_id, study_arm)
   is_treatment <- (data_patients$study_arm == "treatment")
@@ -149,8 +177,8 @@ simulate_data_survival <- function(
 #'   survival <- simulate_data_survival(long, 1, events = 50)
 #'   filter_datasets(long, survival)
 filter_datasets <- function(
-  data_longitudinal,
-  data_survival
+    data_longitudinal,
+    data_survival
 ) {
   data_longitudinal <- left_join(
     x = data_longitudinal,
