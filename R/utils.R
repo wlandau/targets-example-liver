@@ -18,10 +18,10 @@
 #'   data <- simulate_data(hazard_ratio = 0.75, coefficients, n_events = 50)
 #'   joint_model(data, cores = 1)
 joint_model <- function(
-    datasets,
-    chains = 4,
-    iterations = 4e3,
-    cores = 4
+  datasets,
+  chains = 4,
+  iterations = 4e3,
+  cores = 4
 ) {
   # Try to avoid the stan_jm() error running variational Bayes (VB)
   # to create initial values:
@@ -132,10 +132,10 @@ simulate_data_longitudinal <- function(patients = 100, readings = 50) {
 #'   long <- simulate_data_longitudinal()
 #'   survival <- simulate_data_survival(long, 1, events = 50)
 simulate_data_survival <- function(
-    data_longitudinal,
-    hazard_ratio,
-    events,
-    accrual = 10
+  data_longitudinal,
+  hazard_ratio,
+  events,
+  accrual = 10
 ) {
   data_patients <- distinct(data_longitudinal, patient_id, study_arm)
   is_treatment <- (data_patients$study_arm == "treatment")
@@ -177,8 +177,8 @@ simulate_data_survival <- function(
 #'   survival <- simulate_data_survival(long, 1, events = 50)
 #'   filter_datasets(long, survival)
 filter_datasets <- function(
-    data_longitudinal,
-    data_survival
+  data_longitudinal,
+  data_survival
 ) {
   data_longitudinal <- left_join(
     x = data_longitudinal,
