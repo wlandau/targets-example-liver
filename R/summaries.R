@@ -8,10 +8,10 @@
 #'   library(dplyr)
 #'   library(ggplot2)
 #'   library(tibble)
-#'   simulations <- tibble(
-#'     scenario = c(rep("No efficacy", 2), rep("Strong efficacy", 2)),
-#'     n_events = c(50, 100, 50, 100),
-#'     probability_effect = c(0.05, 0.04, 0.81, 0.82)
+#'   trials <- tibble(
+#'     events = c(40, 50, 60, 70),
+#'     probability_efficacy = c(0.05, 0.04, 0.81, 0.82),
+#'     enrolled = c(64, 75, 85, 95)
 #'   )
 #'   plot_results(trials)
 plot_results <- function(trials) {
