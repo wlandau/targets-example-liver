@@ -16,22 +16,20 @@ then the trial should discontinue enrollment.
 ## Interim analysis
 
 An interim analysis will assess futility when a certain number of
-hepatic adverse events have occurred. This event threshold is crucial.
-If it is too low, then there is not enough data to determine if the
-therapy improves survival. If too high, then the trial may expose
-patients to unnecessary risk. The goal of the simulation is to
-empirically determine when the interim should occur. With appropriate
-timing, the interim will have power to detect futility while minimizing
-patient exposures.
+hospitalizations have occurred. This event threshold is crucial. If it
+is too low, then there is not enough data to determine if the therapy
+improves survival. If too high, then the trial may expose patients to
+unnecessary risk. The goal of the simulation is to empirically determine
+when the interim should occur. With appropriate timing, the interim will
+have power to detect futility while minimizing patient exposures.
 
 ## Joint model
 
-The primary endpoint is the number of years until a hepatic adverse
-event occurs (death or liver transplant). The futility analysis uses a
-Bayesian joint model to account for the association between survival and
-bilirubin levels (Lawrence et al. (2016), Brilleman et al. (2018),
-Brilleman (2020), Goodrich et al. (2024)). The longitudinal submodel is
-defined as follows:
+The primary endpoint is the number of years until hospitalization. The
+futility analysis uses a Bayesian joint model to account for the
+association between survival and bilirubin levels (Lawrence et al.
+(2016), Brilleman et al. (2018), Brilleman (2020), Goodrich et al.
+(2024)). The longitudinal submodel is defined as follows:
 
 $$
 \begin{aligned}
