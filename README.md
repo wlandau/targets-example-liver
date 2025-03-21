@@ -7,8 +7,8 @@ trial should conduct an interim analysis to assess futility.
 ## Illustrative clinical trial
 
 Suppose we are designing a randomized controlled double-blind phase 2
-clinical trial to test a novel therapy in patients with a hepatic
-autoimmune disease. The trial will enroll up to 100 patients, and
+clinical trial to test a novel therapy in patients with an autoimmune
+disease of the liver. The trial will enroll up to 100 patients, and
 because the disease is extremely rare, the accrual period is expected to
 last 10 years. If the treatment does not meaningfully improve survival,
 then the trial should discontinue enrollment.
