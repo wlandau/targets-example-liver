@@ -14,7 +14,7 @@
 #'   draw_hazard_ratios(cores = 1)
 draw_hazard_ratios <- function(
   chains = 4,
-  iterations = 4e3,
+  iterations = 8e3,
   cores = 4,
   n_draws = 1000
 ) {
