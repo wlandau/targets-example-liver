@@ -28,8 +28,8 @@ have power to detect futility while minimizing patient exposures.
 The primary endpoint is the number of years until hospitalization. The
 futility analysis uses a Bayesian joint model to account for the
 association between survival and bilirubin levels (Lawrence et al.
-(2016), Brilleman et al. (2018), Brilleman (2020), Goodrich et al.
-(2024)). The longitudinal submodel is defined as follows:
+(2016), Brilleman et al. (2018), Goodrich et al. (2024)). The
+longitudinal submodel is defined as follows:
 
 $$
 \begin{aligned}
@@ -123,18 +123,11 @@ The Quarto report in `results.html` summarizes the results.
 <div id="refs" class="references csl-bib-body hanging-indent"
 entry-spacing="0">
 
-<div id="ref-Brilleman2020" class="csl-entry">
-
-Brilleman, S. L. 2020. “Estimating Joint Models for Longitudinal and
-Time-to-Event Data with <span class="nocase">rstanarm</span>.”
-
-</div>
-
 <div id="ref-Brilleman2018" class="csl-entry">
 
 Brilleman, S. L., M. J. Crowther, M. Moreno-Betancur, J. Buros Novik,
 and R. Wolfe. 2018. “Joint Longitudinal and Time-to-Event Models via
-Stan.” In *StanCon 2018*.
+Stan.” In *StanCon 2018*. <https://github.com/stan-dev/stancon_talks/>.
 
 </div>
 
@@ -151,7 +144,7 @@ Advanced Primary Biliary Cirrhosis.” *New England Journal of Medicine*
 
 Goodrich, B., J. Gabry, I. Ali, and S. L. Brilleman. 2024.
 “<span class="nocase">rstanarm: Bayesian applied regression modeling via
-Stan</span>.”
+Stan</span>.” <https://mc-stan.org/rstanarm>.
 
 </div>
 
