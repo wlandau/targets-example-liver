@@ -3,7 +3,7 @@ title: "Simulation results"
 format: html
 ---
 
-The following bar plot shows probability of declaring futility and the number of patients enrolled each number of events.
+The following bar plot shows the probability of declaring futility and the number of patients enrolled at the interim for each event threshold.
 
 ```{r}
 library(targets)
