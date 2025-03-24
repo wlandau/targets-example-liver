@@ -10,7 +10,7 @@
 #'   library(tibble)
 #'   trials <- tibble(
 #'     events = c(40, 50, 60, 70),
-#'     probability_efficacy = c(0.05, 0.04, 0.81, 0.82),
+#'     efficacy = c(0.05, 0.04, 0.81, 0.82),
 #'     enrolled = c(64, 75, 85, 95)
 #'   )
 #'   plot_results(trials)
@@ -21,7 +21,7 @@ plot_results <- function(trials) {
     group_by(events) |>
     summarize(
       `Probability of futility (%)` = 100 *
-        round(mean(probability_efficacy < 0.4), 2),
+        round(mean(efficacy < 0.4), 2),
       `Patients enrolled` = round(mean(enrolled)),
       .groups = "drop"
     ) |>

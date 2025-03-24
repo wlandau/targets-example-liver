@@ -17,10 +17,9 @@ trial <- function(hazard_ratio, events) {
     pull(`Event|study_armtreatment`) |>
     exp()
   tibble::tibble(
-    probability_efficacy = mean(samples_hazard_ratio < 0.75),
-    mean_hazard_ratio = mean(samples_hazard_ratio),
     events = events,
-    years_analysis = unique(simulated_data$data_survival$years_analysis),
-    enrolled = mean(simulated_data$data_survival$enrolled)
+    efficacy = mean(samples_hazard_ratio < 0.75),
+    enrolled = mean(simulated_data$data_survival$enrolled),
+    years = unique(simulated_data$data_survival$years_analysis)
   )
 }
