@@ -14,7 +14,7 @@ If the treatment does not meaningfully improve survival, then the trial should d
 
 ## Interim analysis
 
-An interim analysis will assess futility when a certain number of hospitalizations have occurred.
+An interim analysis will assess futility when a certain number of events (liver transplant or death) have occurred.
 This event threshold is crucial.
 If it is too low, then there is not enough data to determine if the therapy improves survival.
 If too high, then the trial may expose patients to unnecessary risk.
@@ -23,7 +23,7 @@ With appropriate timing, the interim will have power to detect futility while mi
 
 ## Joint model
 
-The primary endpoint is the number of years until hospitalization.
+The primary endpoint is the number of years until liver transplant or death.
 The futility analysis uses a Bayesian joint model to account for the association between survival and bilirubin levels (@Lawrence2016, @Brilleman2018, @Goodrich2024).
 The longitudinal submodel is defined as follows:
 
