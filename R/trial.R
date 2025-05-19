@@ -19,7 +19,7 @@ trial <- function(hazard_ratio, events) {
   tibble::tibble(
     events = events,
     efficacy = mean(samples_hazard_ratio < 0.75),
-    enrolled = mean(simulated_data$data_survival$enrolled),
+    enrolled = unique(simulated_data$data_survival$enrolled),
     years = unique(simulated_data$data_survival$years_analysis)
   )
 }

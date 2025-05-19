@@ -16,7 +16,7 @@ draw_hazard_ratios <- function(
   chains = 4,
   iterations = 8e3,
   cores = 4,
-  n_draws = 1000
+  n_draws = 10000
 ) {
   data_longitudinal <- pbcseq |>
     mutate(

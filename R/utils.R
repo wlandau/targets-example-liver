@@ -13,6 +13,7 @@
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
+#'   library(survival)
 #'   historical <- model_historical_data(cores = 1)
 #'   coefficients <- colMeans(as_draws_df(historical))
 #'   data <- simulate_data(hazard_ratio = 0.75, coefficients, n_events = 50)
@@ -65,6 +66,7 @@ joint_model <- function(
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
+#'   library(survival)
 #'   simulate_data(1, events = 50)
 simulate_data <- function(hazard_ratio, events) {
   data_longitudinal <- simulate_data_longitudinal()
