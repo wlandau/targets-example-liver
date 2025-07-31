@@ -9,6 +9,7 @@
 #' @examples
 #'   library(dplyr)
 #'   library(rstanarm)
+#'   library(survival)
 #'   trial(1, events = 50)
 trial <- function(hazard_ratio, events) {
   simulated_data <- simulate_data(hazard_ratio, events)
