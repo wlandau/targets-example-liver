@@ -9,6 +9,7 @@
 #' @param cores Number of CPU cores to parallelize the MCMC chains.
 #' @param n_draws Number of draws to keep for the simulation study.
 #' @examples
+#'   library(dplyr)
 #'   library(rstanarm)
 #'   library(survival)
 #'   draw_hazard_ratios(cores = 1)
